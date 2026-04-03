@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Per la mia Dulcinea ✨</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Great+Vibes&display=swap');
+    
+    body {
+      margin: 0; padding: 0;
+      background: linear-gradient(135deg, #f8f1f1, #fffaf0);
+      font-family: 'Playfair Display', serif;
+      color: #5c4033;
+      overflow: hidden;
+      position: relative;
+    }
+    
+    /* Blob gradient animato sfondo */
+    body::before {
+      content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%;
+      background: radial-gradient(circle, rgba(232,213,192,0.4) 0%, rgba(201,166,107,0.15) 100%);
+      animation: blob 25s infinite alternate ease-in-out;
+      z-index: -1; filter: blur(80px);
+    }
+    
+    .container { max-width: 420px; margin: 40px auto; text-align: center; padding: 20px; }
+    
+    .title { 
+      font-family: 'Great Vibes', cursive; font-size: 48px; 
+      margin-bottom: 10px; color: #8a5a2b; text-shadow: 0 0 20px rgba(201,166,107,0.6);
+    }
+    
+    .gift-box {
+      width: 320px; height: 320px; background: rgba(255,255,255,0.85);
+      backdrop-filter: blur(20px); border: 18px solid #e8d5c0; 
+      border-radius: 25px; margin: 30px auto; position: relative;
+      cursor: pointer; box-shadow: 0 25px 50px rgba(0,0,0,0.2);
+      transition: all 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+    .gift-box:hover { transform: scale(1.12) rotate(8deg); box-shadow: 0 40px 60px rgba(201,166,107,0.5); }
+    
+    .lid, .ribbon, .bow { transition: all 1.2s cubic-bezier(0.68, -0.55, 0.27, 1.55); }
+    
+    .surprises { display: none; margin-top: 30px; }
+    .surprises.show { display: block; animation: fadeIn 2s ease; }
+    
+    .card {
+      background: rgba(255,255,255,0.75); backdrop-filter: blur(16px);
+      border-radius: 25px; padding: 18px; margin: 22px auto;
+      box-shadow: 0 15px 35px rgba(0,0,0,0.15);
+      transition: all 0.4s ease; max-width: 340px;
+      perspective: 1000px;
+    }
+    .card:hover {
+      transform: rotateY(12deg) rotateX(8deg) translateY(-10px);
+      box-shadow: 0 0 35px rgba(201,166,107,0.8), 0 25px 40px rgba(0,0,0,0.2);
+    }
+    .card img { width: 100%; border-radius: 18px; transition: transform 0.6s; }
+    .card:hover img { transform: scale(1.05); }
+    
+    .final { margin-top: 50px; font-size: 26px; line-height: 1.4; color: #8a5a2b; text-shadow: 0 0 15px rgba(201,166,107,0.4); }
+    
+    @keyframes blob { 0% { transform: translate(0,0) rotate(0deg); } 100% { transform: translate(30px,40px) rotate(360deg); } }
+    @keyframes fadeIn { from { opacity:0; transform:translateY(30px); } to { opacity:1; transform:none; } }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1 class="title">Buon Compleanno, mia Dulcinea ❤️</h1>
+    <p style="font-size:24px; margin-bottom:30px;">Clicca sul regalo bianco…</p>
+
+    <div id="gift" class="gift-box" onclick="openGift()">
+      <div class="lid" id="lid"></div>
+      <div class="ribbon"></div>
+      <div class="bow"></div>
+      <div style="position:absolute; bottom:40px; left:50%; transform:translateX(-50%); font-size:85px;">🎁</div>
+    </div>
+
+    <div id="surprises" class="surprises">
+      <!-- Le 6 card 3D glassmorphism -->
+      <div class="card"><h3>Tu nella tua robe blanche elegante</h3><img src="images/1-robe-blanche.jpg" alt=""></div>
+      <div class="card"><h3>Con il tuo sac à main preferito</h3><img src="images/2-sac-a-main.jpg" alt=""></div>
+      <div class="card"><h3>Picnic romantico con la tua nourriture préférée</h3><img src="images/3-nourriture.jpg" alt=""></div>
+      <div class="card"><h3>Tu da sposa blanche con borsa</h3><img src="images/4-sposa-blanche.jpg" alt=""></div>
+      <div class="card"><h3>Noi due insieme (romantico)</h3><img src="images/5-coppia-romantica.jpg" alt=""></div>
+      <div class="card"><h3>Il nostro futuro… sempre in bianco</h3><img src="images/6-futuro-insieme.jpg" alt=""></div>
+
+      <div class="final">
+        Ti amo più di ogni cosa al mondo.<br>
+        Ogni giorno con te è un sogno bianco puro ✨
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.2/dist/confetti.browser.min.js"></script>
+  <script>
+    function openGift() {
+      const lid = document.getElementById('lid');
+      const surprises = document.getElementById('surprises');
+      
+      lid.style.transform = 'translateX(-50%) rotate(180deg) translateY(-170px)';
+      
+      setTimeout(() => {
+        surprises.classList.add('show');
+        // Confetti super festoso
+        confetti({ particleCount: 200, spread: 100, origin: { y: 0.6 }, colors: ['#e8d5c0', '#c9a66b', '#ffffff'] });
+        setTimeout(() => confetti({ particleCount: 150, spread: 120, origin: { y: 0.7 } }), 250);
+      }, 1100);
+    }
+  </script>
+</body>
+</html>
