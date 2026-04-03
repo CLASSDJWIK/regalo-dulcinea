@@ -16,7 +16,6 @@
       position: relative;
     }
     
-    /* Blob gradient animato sfondo */
     body::before {
       content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%;
       background: radial-gradient(circle, rgba(232,213,192,0.4) 0%, rgba(201,166,107,0.15) 100%);
@@ -39,8 +38,6 @@
       transition: all 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     }
     .gift-box:hover { transform: scale(1.12) rotate(8deg); box-shadow: 0 40px 60px rgba(201,166,107,0.5); }
-    
-    .lid, .ribbon, .bow { transition: all 1.2s cubic-bezier(0.68, -0.55, 0.27, 1.55); }
     
     .surprises { display: none; margin-top: 30px; }
     .surprises.show { display: block; animation: fadeIn 2s ease; }
@@ -95,14 +92,12 @@
       <div style="position:absolute; bottom:40px; left:50%; transform:translateX(-50%); font-size:85px;">🎁</div>
     </div>
 
-    <!-- MESSAGGIO DI CARICAMENTO -->
     <div id="loading" class="loading">
       <div class="spinner"></div>
       Sto preparando le tue sorprese bianche e magiche… ✨
     </div>
 
     <div id="surprises" class="surprises">
-      <!-- Le 6 card -->
       <div class="card"><h3>Tu nella tua robe blanche elegante</h3><img src="images/1-robe-blanche.jpg" alt=""></div>
       <div class="card"><h3>Con il tuo sac à main preferito</h3><img src="images/2-sac-a-main.jpg" alt=""></div>
       <div class="card"><h3>Picnic romantico con la tua nourriture préférée</h3><img src="images/3-nourriture.jpg" alt=""></div>
@@ -124,18 +119,12 @@
       const loading = document.getElementById('loading');
       const surprises = document.getElementById('surprises');
       
-      // Animazione del regalo
       lid.style.transform = 'translateX(-50%) rotate(180deg) translateY(-170px)';
-      
-      // Mostra il messaggio di caricamento
       loading.classList.add('show');
       
-      // Dopo 1 secondo mostra le sorprese
       setTimeout(() => {
         loading.classList.remove('show');
         surprises.classList.add('show');
-        
-        // Coriandoli
         confetti({ particleCount: 200, spread: 100, origin: { y: 0.6 }, colors: ['#e8d5c0', '#c9a66b', '#ffffff'] });
         setTimeout(() => confetti({ particleCount: 150, spread: 120, origin: { y: 0.7 } }), 250);
       }, 1100);
