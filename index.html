@@ -45,6 +45,23 @@
     .surprises { display: none; margin-top: 30px; }
     .surprises.show { display: block; animation: fadeIn 2s ease; }
     
+    .loading {
+      display: none;
+      margin: 40px auto;
+      color: #8a5a2b;
+      font-size: 22px;
+      text-align: center;
+    }
+    .loading.show { display: block; }
+    .spinner {
+      width: 40px; height: 40px;
+      border: 5px solid #e8d5c0;
+      border-top: 5px solid #c9a66b;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+      margin: 15px auto;
+    }
+    
     .card {
       background: rgba(255,255,255,0.75); backdrop-filter: blur(16px);
       border-radius: 25px; padding: 18px; margin: 22px auto;
@@ -63,6 +80,7 @@
     
     @keyframes blob { 0% { transform: translate(0,0) rotate(0deg); } 100% { transform: translate(30px,40px) rotate(360deg); } }
     @keyframes fadeIn { from { opacity:0; transform:translateY(30px); } to { opacity:1; transform:none; } }
+    @keyframes spin { to { transform: rotate(360deg); } }
   </style>
 </head>
 <body>
@@ -77,8 +95,14 @@
       <div style="position:absolute; bottom:40px; left:50%; transform:translateX(-50%); font-size:85px;">🎁</div>
     </div>
 
+    <!-- MESSAGGIO DI CARICAMENTO -->
+    <div id="loading" class="loading">
+      <div class="spinner"></div>
+      Sto preparando le tue sorprese bianche e magiche… ✨
+    </div>
+
     <div id="surprises" class="surprises">
-      <!-- Le 6 card 3D glassmorphism -->
+      <!-- Le 6 card -->
       <div class="card"><h3>Tu nella tua robe blanche elegante</h3><img src="images/1-robe-blanche.jpg" alt=""></div>
       <div class="card"><h3>Con il tuo sac à main preferito</h3><img src="images/2-sac-a-main.jpg" alt=""></div>
       <div class="card"><h3>Picnic romantico con la tua nourriture préférée</h3><img src="images/3-nourriture.jpg" alt=""></div>
@@ -97,13 +121,21 @@
   <script>
     function openGift() {
       const lid = document.getElementById('lid');
+      const loading = document.getElementById('loading');
       const surprises = document.getElementById('surprises');
       
+      // Animazione del regalo
       lid.style.transform = 'translateX(-50%) rotate(180deg) translateY(-170px)';
       
+      // Mostra il messaggio di caricamento
+      loading.classList.add('show');
+      
+      // Dopo 1 secondo mostra le sorprese
       setTimeout(() => {
+        loading.classList.remove('show');
         surprises.classList.add('show');
-        // Confetti super festoso
+        
+        // Coriandoli
         confetti({ particleCount: 200, spread: 100, origin: { y: 0.6 }, colors: ['#e8d5c0', '#c9a66b', '#ffffff'] });
         setTimeout(() => confetti({ particleCount: 150, spread: 120, origin: { y: 0.7 } }), 250);
       }, 1100);
