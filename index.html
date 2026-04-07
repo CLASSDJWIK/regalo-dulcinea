@@ -24,21 +24,22 @@
         button { background: #c9a66b; color: white; border: none; cursor: pointer; box-shadow: 0 10px 20px rgba(201,166,107,0.4); }
         button:hover { transform: scale(1.05); }
 
-        .explosion { font-size: 58px; animation: explode 1.4s ease forwards; }
-        @keyframes explode { 
-            0% { transform: scale(0.1) rotate(-10deg); opacity: 0; } 
-            60% { transform: scale(1.3) rotate(10deg); } 
-            100% { transform: scale(1) rotate(0deg); } 
-        }
+        .cake-container { position: relative; margin: 30px auto; max-width: 420px; }
+        .cake-container img { width: 100%; border-radius: 30px; box-shadow: 0 20px 40px rgba(0,0,0,0.25); }
 
-        img { max-width: 380px; border-radius: 25px; box-shadow: 0 15px 35px rgba(0,0,0,0.15); margin: 15px 0; }
+        .candles-container { position: absolute; top: 15%; left: 50%; transform: translateX(-50%); display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; max-width: 380px; }
+        .candle { font-size: 52px; animation: lightCandle 0.8s ease forwards; }
+        @keyframes lightCandle {
+            0% { transform: scale(0.3); opacity: 0; }
+            50% { transform: scale(1.4); }
+            100% { transform: scale(1); }
+        }
+        .flame { animation: flameFlicker 0.6s infinite alternate; }
 
         .petali { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 1; }
-        .finale-message { background: rgba(255,255,255,0.9); backdrop-filter: blur(15px); border-radius: 25px; padding: 35px; margin: 30px auto; max-width: 420px; box-shadow: 0 15px 35px rgba(201,166,107,0.3); }
     </style>
 </head>
 <body>
-    <!-- TUA CANZONE ESATTA -->
     <audio id="hbd" src="Petit Bozard - Joyeux anniversaire (Clip officiel) (audio-extractor.net).mp3" loop></audio>
     <div class="petali" id="petali"></div>
 
@@ -51,13 +52,12 @@
         <button onclick="startFesta()">Ouvre mon cadeau spécial ✨</button>
     </section>
 
-    <!-- Passo 1 -->
+    <!-- Passo 1, 2, 3 e Finale restano uguali (come prima) -->
     <section id="passo1">
         <h2>Souvenons-nous de tes premières bougies... ❤️</h2>
         <button onclick="next('passo2')">Continuer le chemin festif →</button>
     </section>
 
-    <!-- Passo 2 - Immagini -->
     <section id="passo2">
         <h2>Ton style festif à travers les années ✨</h2>
         <img src="images/1-robe-blanche.jpg" alt="Robe blanche">
@@ -68,35 +68,28 @@
         <button onclick="next('passo3')">Passo 3 →</button>
     </section>
 
-    <!-- Passo 3 - Quiz Cibo -->
     <section id="passo3">
         <h2>Quel est ton plat préféré ? 🍲</h2>
         <button onclick="quiz('Taro')">Taro</button>
         <button onclick="quiz('Fufu à l’eau et eru')">Fufu à l’eau et eru</button>
         <button onclick="quiz('Poulet Shawarma')">Poulet Shawarma</button>
         <button onclick="quiz('Gâteau très vanilleux au chocolat blanc et noir')">Gâteau très vanilleux au chocolat blanc et noir</button>
-        
         <div id="risposta" style="margin:30px; font-size:22px; min-height:80px;"></div>
         <button onclick="next('finale')" id="avanti3" style="display:none;">Aller au final magique →</button>
     </section>
 
-    <!-- Finale -->
     <section id="finale">
         <h2>Finale lumineux ! 🌟</h2>
         <img src="images/6-futuro-insieme.jpg" alt="Futur ensemble">
-        <div id="countdown" style="font-size:4em; color:#c9a66b; margin:25px 0;">10</div>
-        <p id="messaggio"></p>
-
-        <div class="finale-message">
+        <div class="finale-message" style="margin-top:30px;">
             <h3>Mon message pour toi</h3>
-            <p id="messaggio-personale" style="font-size:22px; line-height:1.6;">
+            <p style="font-size:22px; line-height:1.6;">
                 Ma Dulcinea, aujourd’hui je célèbre chaque année passée et toutes celles à venir avec toi.<br>
                 Tu es ma robe blanche, mon sac à main préféré, mon taro et mon gâteau vanilleux.<br>
                 Je t’aime plus que tout au monde.<br>
                 Joyeux anniversaire, mon amour ❤️
             </p>
         </div>
-
         <button onclick="share()">Partager sur WhatsApp 📱</button>
         <button onclick="reset()">Revoir tout depuis le début</button>
     </section>
@@ -109,30 +102,48 @@
             anni = parseInt(document.getElementById('anni').value) || 25;
             document.getElementById('start').style.display = 'none';
 
-            // === ESPLOSIONE DI N CANDELE + ARTIFICI ===
-            let explosionContainer = document.createElement('div');
-            explosionContainer.style.cssText = 'position:fixed; top:30%; left:50%; transform:translate(-50%, -50%); font-size:58px; z-index:9999; white-space:nowrap;';
-            explosionContainer.className = 'explosion';
-            
-            let candles = '🕯️'.repeat(Math.min(anni, 40)); // max 40 per non appesantire
-            explosionContainer.innerHTML = candles + '<br>🎆🎇🎆🎇';
-            document.body.appendChild(explosionContainer);
+            // Creiamo il contenitore con la torta + n candele
+            const container = document.createElement('div');
+            container.style.cssText = 'position:fixed; top:50%; left:50%; transform:translate(-50%, -50%); z-index:9999; text-align:center; width:90%; max-width:460px;';
 
-            // Confetti + fuochi d'artificio multipli
-            confetti({ particleCount: 280, spread: 90, origin: { y: 0.6 } });
-            setTimeout(() => confetti({ particleCount: 220, spread: 120, origin: { y: 0.5 } }), 300);
-            setTimeout(() => confetti({ particleCount: 180, spread: 80, origin: { y: 0.7 } }), 700);
+            // Scegli una torta casuale tra le 3 che hai aggiunto
+            const cakes = ['torta-festiva.jpg', 'torta-festiva2.jpg', 'torta-festiva3.jpg'];
+            const randomCake = cakes[Math.floor(Math.random() * cakes.length)];
 
-            // Suona la tua canzone
+            container.innerHTML = `
+                <div class="cake-container">
+                    <img src="images/${randomCake}" alt="Torta di compleanno">
+                    <div class="candles-container" id="candlesHere"></div>
+                </div>
+            `;
+            document.body.appendChild(container);
+
+            // Suona la musica
             document.getElementById('hbd').play();
 
-            // Rimuove l'esplosione dopo 2.8 secondi
+            // Confetti grande
+            confetti({ particleCount: 280, spread: 100 });
+
+            // Creiamo esattamente N candele che si accendono una dopo l'altra
+            const candlesContainer = document.getElementById('candlesHere');
+            const numCandele = Math.min(anni, 40); // massimo 40 per non appesantire
+
+            for (let i = 0; i < numCandele; i++) {
+                const candle = document.createElement('span');
+                candle.className = 'candle';
+                candle.innerHTML = '🕯️<span class="flame">🔥</span>';
+                candle.style.animationDelay = (i * 80) + 'ms'; // accensione sequenziale
+                candlesContainer.appendChild(candle);
+            }
+
+            // Dopo 4 secondi togliamo l'animazione e passiamo al passo 1
             setTimeout(() => {
-                explosionContainer.remove();
+                container.remove();
                 next('passo1');
-            }, 2800);
+            }, 4000);
         }
 
+        // Le altre funzioni restano uguali
         function next(id) {
             document.querySelectorAll('section').forEach(s => s.style.display = 'none');
             document.getElementById(id).style.display = 'block';
@@ -162,9 +173,7 @@
             window.open(`https://wa.me/?text=${encodeURIComponent(text)}`);
         }
 
-        function reset() {
-            location.reload();
-        }
+        function reset() { location.reload(); }
 
         function creaPetali() {
             const container = document.getElementById('petali');
