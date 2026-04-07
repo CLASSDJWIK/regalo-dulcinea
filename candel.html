@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8" />
+<title>Candele Animate</title>
+
+<style>
+    body {
+        margin: 0;
+        height: 100vh;
+        background: #111;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 40px;
+        flex-wrap: wrap;
+    }
+
+    .candela {
+        position: relative;
+        width: 30px;
+        height: 120px;
+        background: linear-gradient(to bottom, #fff, #ddd);
+        border-radius: 6px;
+        box-shadow: inset -4px 0 8px rgba(0,0,0,0.2);
+    }
+
+    .stoppino {
+        position: absolute;
+        top: -10px;
+        left: 50%;
+        width: 4px;
+        height: 10px;
+        background: #222;
+        transform: translateX(-50%);
+        border-radius: 2px;
+        z-index: 2;
+    }
+
+    .fiamma {
+        position: absolute;
+        top: -35px;
+        left: 50%;
+        width: 18px;
+        height: 35px;
+        background: radial-gradient(circle at 50% 80%, #ff0, #ff8000, #ff0000);
+        border-radius: 50% 50% 50% 50%;
+        transform: translateX(-50%);
+        animation: scintilla 0.15s infinite alternate;
+        filter: blur(1px);
+        z-index: 1;
+    }
+
+    @keyframes scintilla {
+        from {
+            transform: translateX(-50%) scale(1);
+            opacity: 0.9;
+        }
+        to {
+            transform: translateX(-50%) scale(1.2);
+            opacity: 1;
+        }
+    }
+</style>
+</head>
+
+<body>
+
+<script>
+    function creaCandele(n) {
+        for (let i = 0; i < n; i++) {
+            const candela = document.createElement("div");
+            candela.className = "candela";
+
+            const stoppino = document.createElement("div");
+            stoppino.className = "stoppino";
+
+            const fiamma = document.createElement("div");
+            fiamma.className = "fiamma";
+
+            candela.appendChild(stoppino);
+            candela.appendChild(fiamma);
+            document.body.appendChild(candela);
+        }
+    }
+
+    // 🔥 Cambia qui il numero di candele
+    creaCandele(20);
+</script>
+
+</body>
+</html>
