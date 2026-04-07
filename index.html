@@ -16,8 +16,55 @@
             margin: 0;
             padding: 0;
         }
-        section { display: none; min-height: 100vh; padding: 40px 20px; animation: slideIn 0.8s ease; }
-        @keyframes slideIn { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* === STILE CANDELE FUOCHI D'ARTIFICIO (dal tuo codice) === */
+        .candela{
+            position:absolute;
+            width:8px;
+            height:40px;
+            background:#f8f1f1;
+            border-radius:4px;
+            box-shadow: 0 0 12px #c9a66b;
+        }
+        .fiamma{
+            position:absolute;
+            top:-14px;
+            left:50%;
+            width:14px;
+            height:18px;
+            background:radial-gradient(circle, #ffeb3b, #ff9800, #f44336);
+            border-radius:50%;
+            transform:translateX(-50%);
+            animation:flicker .15s infinite alternate;
+        }
+        @keyframes flicker{
+            from{transform:translateX(-50%) scale(1);}
+            to{transform:translateX(-50%) scale(1.35);}
+        }
+        .scia{
+            position:absolute;
+            width:4px;
+            height:90px;
+            background:linear-gradient(transparent, #ffeb3b);
+            top:38px;
+            left:50%;
+            transform:translateX(-50%);
+            opacity:0.6;
+        }
+        .spark{
+            position:absolute;
+            width:7px;
+            height:7px;
+            border-radius:50%;
+            background:#ffeb3b;
+            animation:explode .9s forwards;
+        }
+        @keyframes explode{
+            to{
+                transform:translate(var(--dx),var(--dy));
+                opacity:0;
+            }
+        }
 
         h1 { font-family: 'Great Vibes', cursive; font-size: 52px; color: #8a5a2b; }
         input, button { padding: 15px 30px; font-size: 20px; border-radius: 50px; margin: 10px; }
@@ -26,12 +73,6 @@
 
         .cake-container { position: relative; margin: 30px auto; max-width: 460px; }
         .cake-container img { width: 100%; border-radius: 30px; box-shadow: 0 20px 40px rgba(0,0,0,0.25); }
-
-        .candles-container { position: absolute; top: 18%; left: 50%; transform: translateX(-50%); display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; max-width: 380px; }
-        .candle { font-size: 55px; animation: lightCandle 0.8s ease forwards; }
-        @keyframes lightCandle { 0% { transform: scale(0.3); opacity: 0; } 100% { transform: scale(1); } }
-
-        img.food-image { max-width: 340px; border-radius: 25px; margin: 20px auto; box-shadow: 0 15px 35px rgba(0,0,0,0.2); }
 
         .petali { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 1; }
     </style>
@@ -49,13 +90,12 @@
         <button onclick="startFesta()">Ouvre mon cadeau spécial ✨</button>
     </section>
 
-    <!-- Passo 1 -->
+    <!-- Passi successivi (come prima) -->
     <section id="passo1">
         <h2>Souvenons-nous de tes premières bougies... ❤️</h2>
         <button onclick="next('passo2')">Continuer le chemin festif →</button>
     </section>
 
-    <!-- Passo 2 - Immagini stile -->
     <section id="passo2">
         <h2>Ton style festif à travers les années ✨</h2>
         <img src="images/1-robe-blanche.jpg" alt="Robe blanche">
@@ -66,21 +106,17 @@
         <button onclick="next('passo3')">Passo 3 →</button>
     </section>
 
-    <!-- Passo 3 - Quiz Cibo con immagini -->
     <section id="passo3">
         <h2>Quel est ton plat préféré ? 🍲</h2>
         <button onclick="quiz('Taro', 'taro-regalo.jpg')">Taro</button>
         <button onclick="quiz('Fufu à l’eau et eru', 'fufu-regalo.jpg')">Fufu à l’eau et eru</button>
         <button onclick="quiz('Poulet Shawarma', 'shawarma-regalo.jpg')">Poulet Shawarma</button>
         <button onclick="quiz('Gâteau très vanilleux au chocolat blanc et noir', 'gateau-regalo.jpg')">Gâteau très vanilleux au chocolat blanc et noir</button>
-        
         <div id="risposta" style="margin:30px; font-size:22px;"></div>
         <div id="foodImage"></div>
-        
         <button onclick="next('finale')" id="avanti3" style="display:none;">Aller au final magique →</button>
     </section>
 
-    <!-- Finale -->
     <section id="finale">
         <h2>Finale lumineux ! 🌟</h2>
         <img src="images/6-futuro-insieme.jpg" alt="Futur ensemble">
@@ -105,38 +141,72 @@
             anni = parseInt(document.getElementById('anni').value) || 25;
             document.getElementById('start').style.display = 'none';
 
-            const container = document.createElement('div');
-            container.style.cssText = 'position:fixed; top:50%; left:50%; transform:translate(-50%, -50%); z-index:9999; text-align:center; width:90%; max-width:460px;';
-
-            const cakes = ['torta-festiva.jpg', 'torta-festiva2.jpg', 'torta-festiva3.jpg'];
-            const randomCake = cakes[Math.floor(Math.random() * cakes.length)];
-
-            container.innerHTML = `
-                <div class="cake-container">
-                    <img src="images/${randomCake}" alt="Torta">
-                    <div class="candles-container" id="candlesHere"></div>
-                </div>
-            `;
-            document.body.appendChild(container);
-
             document.getElementById('hbd').play();
-            confetti({ particleCount: 280, spread: 100 });
 
-            const candlesContainer = document.getElementById('candlesHere');
-            const numCandele = Math.min(anni, 40);
-
-            for (let i = 0; i < numCandele; i++) {
-                const candle = document.createElement('span');
-                candle.className = 'candle';
-                candle.innerHTML = '🕯️<span style="font-size:28px;">🔥</span>';
-                candle.style.animationDelay = (i * 90) + 'ms';
-                candlesContainer.appendChild(candle);
+            // Lancia esattamente N candele con l'animazione che hai chiesto
+            for(let i = 0; i < anni; i++) {
+                setTimeout(lanciaCandela, i * 180);   // più veloci e spettacolari
             }
 
+            confetti({ particleCount: 300, spread: 100 });
+
+            // Dopo 4 secondi passa al prossimo passo
             setTimeout(() => {
-                container.remove();
                 next('passo1');
             }, 4200);
+        }
+
+        function lanciaCandela() {
+            const candela = document.createElement("div");
+            candela.className = "candela";
+
+            const fiamma = document.createElement("div");
+            fiamma.className = "fiamma";
+
+            const scia = document.createElement("div");
+            scia.className = "scia";
+
+            candela.appendChild(fiamma);
+            candela.appendChild(scia);
+            document.body.appendChild(candela);
+
+            const startX = Math.random() * window.innerWidth;
+            const endX = Math.random() * window.innerWidth;
+            const endY = Math.random() * (window.innerHeight / 2) + 80;
+
+            candela.style.left = startX + "px";
+            candela.style.bottom = "0px";
+
+            candela.animate([
+                { transform: `translate(0, 0)` },
+                { transform: `translate(${endX - startX}px, -${window.innerHeight - endY}px)` }
+            ], {
+                duration: 1600,
+                easing: "ease-out",
+                fill: "forwards"
+            });
+
+            setTimeout(() => {
+                esplodi(endX, endY);
+                candela.remove();
+            }, 1600);
+        }
+
+        function esplodi(x, y) {
+            for(let i = 0; i < 25; i++) {
+                const spark = document.createElement("div");
+                spark.className = "spark";
+                spark.style.left = x + "px";
+                spark.style.top = y + "px";
+
+                const dx = (Math.random() - 0.5) * 220 + "px";
+                const dy = (Math.random() - 0.5) * 220 + "px";
+                spark.style.setProperty('--dx', dx);
+                spark.style.setProperty('--dy', dy);
+
+                document.body.appendChild(spark);
+                setTimeout(() => spark.remove(), 900);
+            }
         }
 
         function next(id) {
@@ -148,12 +218,7 @@
 
         function quiz(scelta, imageName) {
             document.getElementById('risposta').innerHTML = `Parfait ! ${scelta} pour tes ${anni} ans ! 🍽️`;
-            
-            // Mostra l'immagine del cibo scelto
-            document.getElementById('foodImage').innerHTML = `
-                <img src="images/${imageName}" class="food-image" alt="${scelta}">
-            `;
-            
+            document.getElementById('foodImage').innerHTML = `<img src="images/${imageName}" class="food-image" alt="${scelta}">`;
             document.getElementById('avanti3').style.display = 'inline';
         }
 
