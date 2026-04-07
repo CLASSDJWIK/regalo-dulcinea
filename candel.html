@@ -2,63 +2,79 @@
 <html lang="it">
 <head>
 <meta charset="UTF-8" />
-<title>Candele Animate</title>
+<title>Candele in Cerchio</title>
 
 <style>
     body {
         margin: 0;
         height: 100vh;
-        background: #111;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        gap: 40px;
-        flex-wrap: wrap;
+        background: radial-gradient(circle, #1a1a1a, #000);
+        overflow: hidden;
+        font-family: sans-serif;
+        color: white;
+    }
+
+    .controls {
+        position: absolute;
+        top: 20px;
+        left: 50%;
+        transform: translateX(-50%);
+        z-index: 10;
+    }
+
+    input, button {
+        padding: 10px;
+        font-size: 18px;
+        border-radius: 6px;
+        border: none;
+    }
+
+    #area {
+        position: absolute;
+        width: 100%;
+        height: 100%;
     }
 
     .candela {
-        position: relative;
-        width: 30px;
-        height: 120px;
-        background: linear-gradient(to bottom, #fff, #ddd);
-        border-radius: 6px;
-        box-shadow: inset -4px 0 8px rgba(0,0,0,0.2);
-    }
-
-    .stoppino {
         position: absolute;
-        top: -10px;
-        left: 50%;
-        width: 4px;
-        height: 10px;
-        background: #222;
-        transform: translateX(-50%);
-        border-radius: 2px;
-        z-index: 2;
+        width: 20px;
+        height: 80px;
+        background: linear-gradient(#fff, #ddd);
+        border-radius: 5px;
+        transform-origin: center -150px;
+        animation: salto 1s ease-in-out infinite;
     }
 
     .fiamma {
         position: absolute;
-        top: -35px;
+        top: -22px;
         left: 50%;
-        width: 18px;
-        height: 35px;
-        background: radial-gradient(circle at 50% 80%, #ff0, #ff8000, #ff0000);
-        border-radius: 50% 50% 50% 50%;
+        width: 12px;
+        height: 22px;
+        background: radial-gradient(circle, yellow, orange, red);
+        border-radius: 50%;
         transform: translateX(-50%);
-        animation: scintilla 0.15s infinite alternate;
-        filter: blur(1px);
-        z-index: 1;
+        animation: flicker 0.15s infinite alternate;
     }
 
-    @keyframes scintilla {
-        from {
-            transform: translateX(-50%) scale(1);
-            opacity: 0.9;
-        }
+    @keyframes flicker {
+        from { transform: translateX(-50%) scale(1); opacity: .8;}
+        to { transform: translateX(-50%) scale(1.2); opacity: 1;}
+    }
+
+    @keyframes salto {
+        0%,100% { margin-top: 0; }
+        50% { margin-top: -20px; }
+    }
+
+    .scoppia {
+        animation: esplodi 0.6s forwards;
+    }
+
+    @keyframes esplodi {
         to {
-            transform: translateX(-50%) scale(1.2);
-            opacity: 1;
+            transform: scale(2);
+            opacity: 0;
         }
     }
 </style>
@@ -66,26 +82,55 @@
 
 <body>
 
+<div class="controls">
+    <input type="number" id="anni" placeholder="Inserisci età" />
+    <button onclick="avvia()">Accendi Candele 🎂</button>
+</div>
+
+<div id="area"></div>
+
 <script>
-    function creaCandele(n) {
-        for (let i = 0; i < n; i++) {
-            const candela = document.createElement("div");
-            candela.className = "candela";
+const area = document.getElementById("area");
 
-            const stoppino = document.createElement("div");
-            stoppino.className = "stoppino";
+function avvia() {
+    area.innerHTML = "";
+    const n = parseInt(document.getElementById("anni").value);
+    const raggio = 200;
+    const centroX = window.innerWidth / 2;
+    const centroY = window.innerHeight / 2;
 
-            const fiamma = document.createElement("div");
-            fiamma.className = "fiamma";
-
-            candela.appendChild(stoppino);
-            candela.appendChild(fiamma);
-            document.body.appendChild(candela);
-        }
+    for (let i = 0; i < n; i++) {
+        setTimeout(() => creaCandela(i, n, raggio, centroX, centroY), i * 300);
     }
 
-    // 🔥 Cambia qui il numero di candele
-    creaCandele(20);
+    setTimeout(() => scoppiaTutte(), n * 300 + 4000);
+}
+
+function creaCandela(i, n, r, cx, cy) {
+    const angolo = (i / n) * (2 * Math.PI);
+
+    const x = cx + r * Math.cos(angolo);
+    const y = cy + r * Math.sin(angolo);
+
+    const candela = document.createElement("div");
+    candela.className = "candela";
+    candela.style.left = x + "px";
+    candela.style.top = y + "px";
+    candela.style.transform = `rotate(${angolo}rad)`;
+
+    const fiamma = document.createElement("div");
+    fiamma.className = "fiamma";
+
+    candela.appendChild(fiamma);
+    area.appendChild(candela);
+}
+
+function scoppiaTutte() {
+    const candele = document.querySelectorAll(".candela");
+    candele.forEach((c, i) => {
+        setTimeout(() => c.classList.add("scoppia"), i * 100);
+    });
+}
 </script>
 
 </body>
