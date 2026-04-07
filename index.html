@@ -24,8 +24,12 @@
         button { background: #c9a66b; color: white; border: none; cursor: pointer; box-shadow: 0 10px 20px rgba(201,166,107,0.4); }
         button:hover { transform: scale(1.05); }
 
-        .candeline { font-size: 55px; animation: explode 1.2s ease; }
-        @keyframes explode { 0% { transform: scale(0.2); } 70% { transform: scale(1.4); } 100% { transform: scale(1); } }
+        .explosion { font-size: 58px; animation: explode 1.4s ease forwards; }
+        @keyframes explode { 
+            0% { transform: scale(0.1) rotate(-10deg); opacity: 0; } 
+            60% { transform: scale(1.3) rotate(10deg); } 
+            100% { transform: scale(1) rotate(0deg); } 
+        }
 
         img { max-width: 380px; border-radius: 25px; box-shadow: 0 15px 35px rgba(0,0,0,0.15); margin: 15px 0; }
 
@@ -34,8 +38,8 @@
     </style>
 </head>
 <body>
-    <!-- Musique de fête (cambiata) -->
-    <audio id="hbd" src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-18.mp3" loop></audio>
+    <!-- TUA CANZONE ESATTA -->
+    <audio id="hbd" src="Petit Bozard - Joyeux anniversaire (Clip officiel) (audio-extractor.net).mp3" loop></audio>
     <div class="petali" id="petali"></div>
 
     <!-- Schermata iniziale -->
@@ -64,7 +68,7 @@
         <button onclick="next('passo3')">Passo 3 →</button>
     </section>
 
-    <!-- Passo 3 - Quiz Cibo Africano -->
+    <!-- Passo 3 - Quiz Cibo -->
     <section id="passo3">
         <h2>Quel est ton plat préféré ? 🍲</h2>
         <button onclick="quiz('Taro')">Taro</button>
@@ -83,11 +87,9 @@
         <div id="countdown" style="font-size:4em; color:#c9a66b; margin:25px 0;">10</div>
         <p id="messaggio"></p>
 
-        <!-- === IL TUO MESSAGGIO PERSONALE === -->
         <div class="finale-message">
             <h3>Mon message pour toi</h3>
             <p id="messaggio-personale" style="font-size:22px; line-height:1.6;">
-                <!-- Cambia qui il tuo messaggio -->
                 Ma Dulcinea, aujourd’hui je célèbre chaque année passée et toutes celles à venir avec toi.<br>
                 Tu es ma robe blanche, mon sac à main préféré, mon taro et mon gâteau vanilleux.<br>
                 Je t’aime plus que tout au monde.<br>
@@ -107,23 +109,28 @@
             anni = parseInt(document.getElementById('anni').value) || 25;
             document.getElementById('start').style.display = 'none';
 
-            // Esplosione di candele/artifici (numero = età, max 30)
-            let numCandele = Math.min(anni, 30);
-            let candleHtml = '🕯️'.repeat(numCandele);
-            let div = document.createElement('div');
-            div.className = 'candeline';
-            div.innerHTML = candleHtml + '<br>🎆🎇🎆';
-            document.body.appendChild(div);
+            // === ESPLOSIONE DI N CANDELE + ARTIFICI ===
+            let explosionContainer = document.createElement('div');
+            explosionContainer.style.cssText = 'position:fixed; top:30%; left:50%; transform:translate(-50%, -50%); font-size:58px; z-index:9999; white-space:nowrap;';
+            explosionContainer.className = 'explosion';
+            
+            let candles = '🕯️'.repeat(Math.min(anni, 40)); // max 40 per non appesantire
+            explosionContainer.innerHTML = candles + '<br>🎆🎇🎆🎇';
+            document.body.appendChild(explosionContainer);
 
-            // Confetti + artifici
-            confetti({ particleCount: 300, spread: 120, origin: { y: 0.5 } });
+            // Confetti + fuochi d'artificio multipli
+            confetti({ particleCount: 280, spread: 90, origin: { y: 0.6 } });
+            setTimeout(() => confetti({ particleCount: 220, spread: 120, origin: { y: 0.5 } }), 300);
+            setTimeout(() => confetti({ particleCount: 180, spread: 80, origin: { y: 0.7 } }), 700);
 
+            // Suona la tua canzone
             document.getElementById('hbd').play();
 
+            // Rimuove l'esplosione dopo 2.8 secondi
             setTimeout(() => {
-                div.remove();
+                explosionContainer.remove();
                 next('passo1');
-            }, 2500);
+            }, 2800);
         }
 
         function next(id) {
